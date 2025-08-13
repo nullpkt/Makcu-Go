@@ -6,6 +6,7 @@ import (
 	"syscall"
 	"time"
 	"unsafe"
+	"regexp"
 
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
@@ -104,6 +105,7 @@ func Find() (makcuPort string, err error) {
 			DebugPrint("Description: %s\r\n", description)
 			DebugPrint("Hardware Info: %s\r\n", hwid)
 
+<<<<<<< HEAD
 			// Try to extract COM port from device name
 			if strings.Contains(deviceName, "COM") {
 				port := strings.Split(deviceName, "COM")[1]
@@ -116,6 +118,17 @@ func Find() (makcuPort string, err error) {
 
 			// Fallback: try to get port from registry
 			port, err := GetPortName(h, (*byte)(unsafe.Pointer(&devInfo)))
+=======
+			Port := regexp.MustCompile(`COM\d+`).FindString(DeviceName) // creds to yrlu for this idea lawl
+			if Port != "" {
+				DebugPrint("Port Name: %s\n", Port)
+				DebugPrint("--------\r\n")
+				return Port, nil
+			}
+
+			// if we can't find the COM port from the name, then we try to get it from the registry.
+			Port, err = GetPortName(h, (*byte)(unsafe.Pointer(&devInfo)))
+>>>>>>> 52bd9b82ba7414327124cdf8f1e6ecd05e0181e4
 			if err != nil {
 				DebugPrint("Failed to get port name: %v\n", err)
 				return "", err
@@ -127,8 +140,17 @@ func Find() (makcuPort string, err error) {
 			}
 			return "", nil
 		}
+<<<<<<< HEAD
 		index++
 	}
+=======
+
+		index++
+	}
+
+	fmt.Printf("Failed to locate MAKCU!\n")
+
+>>>>>>> 52bd9b82ba7414327124cdf8f1e6ecd05e0181e4
 	return "", fmt.Errorf("Device not found")
 }
 
@@ -442,3 +464,10 @@ func (m *MakcuHandle) MoveMouseWithCurve(x, y int, params ...int) error {
 	}
 	return nil
 }
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 52bd9b82ba7414327124cdf8f1e6ecd05e0181e4
